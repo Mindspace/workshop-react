@@ -1,0 +1,33 @@
+{
+  "npmScope": "workshop",
+  "affected": {
+    "defaultBase": "develop"
+  },
+  "implicitDependencies": {
+    "workspace.json": "*",
+    "package.json": {
+      "dependencies": "*",
+      "devDependencies": "*"
+    },
+    "tslint.json": "*",
+    "nx.json": "*",
+    "tsconfig.base.json": "*"
+  },
+  "projects": {
+    "contacts-e2e": {
+      "tags": ["scope:contacts", "type:e2e"],
+      "implicitDependencies": ["contacts"]
+    },
+    "contacts": {
+      "tags": ["scope:contacts", "type:app"]
+    }
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/workspace/tasks-runners/default",
+      "options": {
+        "cacheableOperations": ["build", "lint", "test", "e2e"]
+      }
+    }
+  }
+}

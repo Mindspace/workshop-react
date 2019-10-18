@@ -1,0 +1,175 @@
+{
+  "version": 1,
+  "projects": {
+    "contacts": {
+      "root": "apps/contacts",
+      "sourceRoot": "apps/contacts/src",
+      "projectType": "application",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@nrwl/web:build",
+          "options": {
+            "outputPath": "dist/apps/contacts",
+            "index": "apps/contacts/src/index.html",
+            "main": "apps/contacts/src/main.tsx",
+            "polyfills": "apps/contacts/src/polyfills.ts",
+            "tsConfig": "apps/contacts/tsconfig.app.json",
+            "assets": ["apps/contacts/src/favicon.ico", "apps/contacts/src/assets"],
+            "styles": ["apps/contacts/src/styles.scss"],
+            "scripts": [],
+            "webpackConfig": "@nrwl/react/plugins/webpack"
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/contacts/src/environments/environment.ts",
+                  "with": "apps/contacts/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/web:dev-server",
+          "options": {
+            "buildTarget": "contacts:build",
+            "proxyConfig": "apps/contacts/proxy.conf.json"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "contacts:build:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "tsConfig": ["apps/contacts/tsconfig.app.json", "apps/contacts/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!apps/contacts/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/contacts/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "contacts-e2e": {
+      "root": "apps/contacts-e2e",
+      "sourceRoot": "apps/contacts-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/contacts-e2e/cypress.json",
+            "tsConfig": "apps/contacts-e2e/tsconfig.e2e.json",
+            "devServerTarget": "contacts:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "contacts:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "tsConfig": ["apps/contacts-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/contacts-e2e/**/*"]
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/react"
+  },
+  "schematics": {
+    "@nrwl/workspace": {
+      "library": {
+        "linter": "eslint"
+      }
+    },
+    "@nrwl/cypress": {
+      "cypress-project": {
+        "linter": "eslint"
+      }
+    },
+    "@nrwl/react": {
+      "application": {
+        "style": "scss",
+        "linter": "eslint",
+        "babel": true
+      },
+      "library": {
+        "style": "scss",
+        "linter": "eslint"
+      },
+      "storybook-configuration": {
+        "linter": "eslint"
+      },
+      "component": {
+        "style": "scss"
+      }
+    },
+    "@nrwl/next": {
+      "application": {
+        "linter": "eslint"
+      }
+    },
+    "@nrwl/web": {
+      "application": {
+        "linter": "eslint"
+      }
+    },
+    "@nrwl/node": {
+      "application": {
+        "linter": "eslint"
+      },
+      "library": {
+        "linter": "eslint"
+      }
+    },
+    "@nrwl/nx-plugin": {
+      "plugin": {
+        "linter": "eslint"
+      }
+    },
+    "@nrwl/nest": {
+      "application": {
+        "linter": "eslint"
+      }
+    },
+    "@nrwl/express": {
+      "application": {
+        "linter": "eslint"
+      },
+      "library": {
+        "linter": "eslint"
+      }
+    }
+  },
+  "defaultProject": "contacts"
+}
