@@ -1,0 +1,30 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "allowJs": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noUnusedLocals": true,
+    "noImplicitReturns": true,
+    "resolveJsonModule": true,
+    "importHelpers": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react",
+    "target": "es2015",
+    "module": "esnext",
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["dom", "dom.iterable", "es2017"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {}
+  },
+  "exclude": ["node_modules", "tmp"]
+}

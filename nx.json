@@ -1,0 +1,22 @@
+{
+  "npmScope": "workshop",
+  "implicitDependencies": {
+    "workspace.json": "*",
+    "package.json": {
+      "dependencies": "*",
+      "devDependencies": "*"
+    },
+    "tsconfig.json": "*",
+    "tslint.json": "*",
+    "nx.json": "*"
+  },
+  "projects": {
+    "contacts-e2e": {
+      "tags": ["scope:contacts", "type:e2e"],
+      "implicitDependencies": ["contacts"]
+    },
+    "contacts": {
+      "tags": ["scope:contacts", "type:app"]
+    }
+  }
+}
