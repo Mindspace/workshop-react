@@ -10,11 +10,12 @@ import {
   IonItem,
   IonIcon,
   IonInput,
-  useIonViewDidEnter
+  useIonViewDidEnter,
+  useIonViewWillLeave
 } from '@ionic/react';
 
-import { Observable, Subscriber, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Subject, merge, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 import { Contact } from '../+state/contacts.model';
 import { ContactsService } from '../+state/contacts.service';
@@ -40,6 +41,7 @@ const iconOnLeft = {
 export const ContactsList: React.FC = () => {
   const [service] = useState<ContactsService>(new ContactsService());
   const [emitter] = useState<Subject<string>>(new Subject<string>());
+  const [watch, setWatch] = useState<Subscription>(null);
   const [people, setPeople] = useState<Contact[]>([]);
 
   const searchByName = React.createRef<HTMLIonInputElement>();
@@ -47,22 +49,17 @@ export const ContactsList: React.FC = () => {
     emitter.next(e.target.value);
   };
 
+  useIonViewDidEnter(() => searchByName.current.setFocus());
+  useIonViewWillLeave(() => watch.unsubscribe());
   useIonViewWillEnter(() => {
     const allContacts$ = service.getContacts();
     const searchTerm$ = emitter.asObservable().pipe(
       debounceTime(250),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      switchMap(term => service.searchBy(term))
     );
 
-    allContacts$.subscribe(list => setPeople(list));
-    searchTerm$.subscribe(term => {
-      const search$ = service.searchBy(term);
-      search$.subscribe(list => setPeople(list));
-    });
-  });
-
-  useIonViewDidEnter(() => {
-    searchByName.current.setFocus();
+    setWatch(merge(allContacts$, searchTerm$).subscribe(list => setPeople(list)));
   });
 
   return (
