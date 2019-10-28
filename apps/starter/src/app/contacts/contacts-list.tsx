@@ -19,8 +19,9 @@ import { ContactListItem } from './contact-item';
 import { Observable, Subscriber } from 'rxjs';
 
 const inlineItem = {
-  display: 'inline-block',
   '--min-height': '20px',
+  '--border-radius': '5px',
+  display: 'inline-block',
   paddingLeft: '10px'
 } as React.CSSProperties;
 
@@ -35,13 +36,18 @@ const iconOnLeft = {
 };
 
 export const ContactsList: React.FC = () => {
-  const service = new ContactsService();
-  const searchByName = React.createRef<HTMLIonInputElement>();
+  const [service] = useState<ContactsService>(new ContactsService());
   const [people, setPeople] = useState<Contact[]>([]);
 
-  useIonViewWillEnter(() => {
-    const request$ = service.getContacts();
+  const searchByName = React.createRef<HTMLIonInputElement>();
+  const onSearchByName = e => {
+    const request$ = service.searchBy(e.target.value);
     request$.subscribe(list => setPeople(list));
+  };
+
+  useIonViewWillEnter(() => {
+    const allContacts$ = service.getContacts();
+    allContacts$.subscribe(list => setPeople(list));
   });
 
   useIonViewDidEnter(() => {
@@ -59,6 +65,7 @@ export const ContactsList: React.FC = () => {
               autofocus
               style={iconOnLeft}
               ref={searchByName}
+              onIonChange={onSearchByName}
               placeholder="Search by name..."
             ></IonInput>
           </IonItem>
