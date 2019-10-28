@@ -13,10 +13,12 @@ import {
   useIonViewDidEnter
 } from '@ionic/react';
 
+import { Observable, Subscriber, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+
 import { Contact } from '../+state/contacts.model';
 import { ContactsService } from '../+state/contacts.service';
 import { ContactListItem } from './contact-item';
-import { Observable, Subscriber } from 'rxjs';
 
 const inlineItem = {
   '--min-height': '20px',
@@ -37,17 +39,26 @@ const iconOnLeft = {
 
 export const ContactsList: React.FC = () => {
   const [service] = useState<ContactsService>(new ContactsService());
+  const [emitter] = useState<Subject<string>>(new Subject<string>());
   const [people, setPeople] = useState<Contact[]>([]);
 
   const searchByName = React.createRef<HTMLIonInputElement>();
   const onSearchByName = e => {
-    const request$ = service.searchBy(e.target.value);
-    request$.subscribe(list => setPeople(list));
+    emitter.next(e.target.value);
   };
 
   useIonViewWillEnter(() => {
     const allContacts$ = service.getContacts();
+    const searchTerm$ = emitter.asObservable().pipe(
+      debounceTime(250),
+      distinctUntilChanged()
+    );
+
     allContacts$.subscribe(list => setPeople(list));
+    searchTerm$.subscribe(term => {
+      const search$ = service.searchBy(term);
+      search$.subscribe(list => setPeople(list));
+    });
   });
 
   useIonViewDidEnter(() => {
