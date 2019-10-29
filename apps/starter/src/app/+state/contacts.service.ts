@@ -1,6 +1,7 @@
 import uuid from 'react-uuid';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+
 import { Contact } from './contacts.model';
 
 /**
@@ -48,6 +49,20 @@ export class ContactsService implements ContactsService {
         }, null)
       : null;
     return of(who);
+  }
+
+  /**
+   * Watch input stream, apply biz rules and then
+   * search for Contacts with partial name terms
+   * @param term$
+   * @param debounceMs
+   */
+  autoSearch(term$: Observable<string>, debounceMs = 250): Observable<Contact[]> {
+    return term$.pipe(
+      debounceTime(debounceMs),
+      distinctUntilChanged(),
+      switchMap(term => this.searchBy(term))
+    );
   }
 
   /**

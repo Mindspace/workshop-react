@@ -15,7 +15,7 @@ import {
 } from '@ionic/react';
 
 import { Subject, merge, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, takeUntil, delay } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 
 import { Contact } from '../+state/contacts.model';
 import { ContactsService } from '../+state/contacts.service';
@@ -54,11 +54,7 @@ export const ContactsList: React.FC = () => {
   useIonViewWillEnter(() => {
     const term$ = emitter.asObservable();
     const allContacts$ = service.getContacts().pipe(takeUntil(term$));
-    const searchTerm$ = term$.pipe(
-      debounceTime(250),
-      distinctUntilChanged(),
-      switchMap(term => service.searchBy(term))
-    );
+    const searchTerm$ = service.autoSearch(term$);
 
     setWatch(merge(allContacts$, searchTerm$).subscribe(list => setPeople(list)));
   });
