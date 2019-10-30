@@ -11,8 +11,7 @@ import {
   IonLabel
 } from '@ionic/react';
 
-import { Contact } from '../+state/contacts.model';
-import { ContactsService } from '../+state/contacts.service';
+import { Contact, ContactsService } from '../+state';
 
 import './contact-details.scss';
 
@@ -25,6 +24,7 @@ const gridItem = {
 export interface ContactDetailPage extends RouteComponentProps<{ id: string }> {}
 
 export const ContactDetails: React.FC<ContactDetailPage> = ({ match }) => {
+  const [service] = useState<ContactsService>(new ContactsService());
   const [contact, setContact] = useState<Contact>({} as Contact);
 
   useIonViewWillEnter(() => {

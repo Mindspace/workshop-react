@@ -7,6 +7,7 @@ import './app.scss';
 
 import { ContactsList } from './contacts/contacts-list';
 import { ContactDetails } from './contacts/contact-detail';
+import { ContactsFacade } from './+state';
 
 export const App = () => {
   return (

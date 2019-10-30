@@ -1,6 +1,7 @@
 import uuid from 'react-uuid';
+
 import { Observable, of } from 'rxjs';
-import { map, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { map, debounceTime, distinctUntilChanged, switchMap, delay } from 'rxjs/operators';
 
 import { Contact } from './contacts.model';
 
@@ -49,6 +50,10 @@ export class ContactsService implements ContactsService {
         }, null)
       : null;
     return of(who);
+  }
+
+  updateContact(contact: Contact): Observable<Contact> {
+    return of({ ...contact }).pipe(delay(700));
   }
 
   /**

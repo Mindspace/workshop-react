@@ -14,11 +14,10 @@ import {
   useIonViewWillLeave
 } from '@ionic/react';
 
-import { Subject, merge, Subscription } from 'rxjs';
+import { Subject, merge, Subscription, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { Contact } from '../+state/contacts.model';
-import { ContactsService } from '../+state/contacts.service';
+import { Contact, ContactsService } from '../+state';
 import { ContactListItem } from './contact-item';
 
 const inlineItem = {
@@ -41,22 +40,27 @@ const iconOnLeft = {
 export const ContactsList: React.FC = () => {
   const [service] = useState<ContactsService>(new ContactsService());
   const [emitter] = useState<Subject<string>>(new Subject<string>());
-  const [watch, setWatch] = useState<Subscription>(null);
+  const [watches, setWatch] = useState<Subscription[]>([]);
   const [people, setPeople] = useState<Contact[]>([]);
+  const [criteria, setCriteria] = useState<string>('');
 
   const searchByName = React.createRef<HTMLIonInputElement>();
-  const onSearchByName = e => {
-    emitter.next(e.target.value);
+
+  const onSearchByName = e => emitter.next(e.target.value);
+  const addWatch = (source$: Observable<any>, next: (val: any) => void) => {
+    const subscription = source$.subscribe(next);
+    setWatch([subscription].concat(watches));
   };
 
+  useIonViewWillLeave(() => watches.map(it => it.unsubscribe()));
   useIonViewDidEnter(() => searchByName.current.setFocus());
-  useIonViewWillLeave(() => watch.unsubscribe());
   useIonViewWillEnter(() => {
     const term$ = emitter.asObservable();
     const allContacts$ = service.getContacts().pipe(takeUntil(term$));
     const searchTerm$ = service.autoSearch(term$);
 
-    setWatch(merge(allContacts$, searchTerm$).subscribe(list => setPeople(list)));
+    addWatch(term$, term => setCriteria(term));
+    addWatch(merge(allContacts$, searchTerm$), list => setPeople(list));
   });
 
   return (
@@ -70,6 +74,7 @@ export const ContactsList: React.FC = () => {
               autofocus
               style={iconOnLeft}
               ref={searchByName}
+              value={criteria}
               onIonChange={onSearchByName}
               placeholder="Search by name..."
             ></IonInput>
