@@ -1,32 +1,35 @@
 import uuid from 'react-uuid';
+import { InjectionToken } from '@mindspace/core';
 
 import { Observable, of } from 'rxjs';
 import { map, debounceTime, distinctUntilChanged, switchMap, delay } from 'rxjs/operators';
 
 import { Contact } from './contacts.model';
 
+export const API_ENDPOINT = new InjectionToken('endpoint.ui-faces.com');
+export const API_KEY = new InjectionToken('api-key.ui-faces.com');
 /**
  * Internal state for singleton ContactsService
  */
 let contacts: Contact[];
 
-const API_ENDPOINT = 'https://uifaces.co/api?limit=25;';
-const API_HEADERS = { headers: { 'x-API-KEY': '873771d7760b846d51d025ac5804ab' } };
+async function loadContacts<T>(apiEndPoint: string, apiKey: string) {
+  const headers = { headers: { 'x-API-KEY': apiKey } };
 
-async function fetchFaces<T>() {
-  const result = await fetch(API_ENDPOINT, API_HEADERS);
+  const result = await fetch(apiEndPoint, headers);
   const data = await result.json();
   return <T>data;
 }
 
 export class ContactsService implements ContactsService {
+  constructor(private apiEndPoint: string, private apiKey: string) {}
   /**
    * Load a list from the REST service...
    */
   getContacts(skipCache = false): Observable<Contact[]> {
     const request$ = new Observable<Contact[]>(subscriber => {
       let shouldNotify = true;
-      fetchFaces<Contact[]>()
+      this.loadContacts()
         .then(list => {
           if (shouldNotify) {
             subscriber.next((contacts = assignUIDs(list)));
@@ -85,6 +88,13 @@ export class ContactsService implements ContactsService {
       map(list => list.filter(filterByName)),
       map(list => list.filter(filterByTitle))
     );
+  }
+
+  /**
+   * internal wrapper to fetch function...
+   */
+  private loadContacts(): Promise<Contact[]> {
+    return loadContacts<Contact[]>(this.apiEndPoint, this.apiKey);
   }
 }
 

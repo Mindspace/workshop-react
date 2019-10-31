@@ -10,15 +10,15 @@ import {
   IonItem,
   IonIcon,
   IonInput,
-  useIonViewDidEnter,
-  useIonViewWillLeave
+  useIonViewDidEnter
 } from '@ionic/react';
 
-import { Subject, merge, Subscription, Observable } from 'rxjs';
+import { Subject, merge } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { useObservable } from '@mindspace/core';
 
-import { Contact, ContactsService } from '../+state';
 import { ContactListItem } from './contact-item';
+import { ContactsFacade, Contact, injector } from '../../+state';
 
 const inlineItem = {
   '--min-height': '20px',
@@ -38,29 +38,21 @@ const iconOnLeft = {
 };
 
 export const ContactsList: React.FC = () => {
-  const [service] = useState<ContactsService>(new ContactsService());
+  const [facade] = useState<ContactsFacade>(injector.get(ContactsFacade));
   const [emitter] = useState<Subject<string>>(new Subject<string>());
-  const [watches, setWatch] = useState<Subscription[]>([]);
-  const [people, setPeople] = useState<Contact[]>([]);
-  const [criteria, setCriteria] = useState<string>('');
-
+  const [people, setPeople$] = useObservable<Contact[]>(null, []);
+  const [criteria, setCriteria$] = useObservable<string>(null, '');
   const searchByName = React.createRef<HTMLIonInputElement>();
+  const doSearch = e => emitter.next(e.target.value);
 
-  const onSearchByName = e => emitter.next(e.target.value);
-  const addWatch = (source$: Observable<any>, next: (val: any) => void) => {
-    const subscription = source$.subscribe(next);
-    setWatch([subscription].concat(watches));
-  };
-
-  useIonViewWillLeave(() => watches.map(it => it.unsubscribe()));
   useIonViewDidEnter(() => searchByName.current.setFocus());
   useIonViewWillEnter(() => {
     const term$ = emitter.asObservable();
-    const allContacts$ = service.getContacts().pipe(takeUntil(term$));
-    const searchTerm$ = service.autoSearch(term$);
+    const allContacts$ = facade.contacts$.pipe(takeUntil(term$));
+    const searchTerm$ = facade.autoSearch(term$);
 
-    addWatch(term$, term => setCriteria(term));
-    addWatch(merge(allContacts$, searchTerm$), list => setPeople(list));
+    setCriteria$(term$);
+    setPeople$(merge(allContacts$, searchTerm$));
   });
 
   return (
@@ -72,11 +64,11 @@ export const ContactsList: React.FC = () => {
             <IonInput
               clearInput
               autofocus
+              placeholder="Search by name..."
               style={iconOnLeft}
               ref={searchByName}
               value={criteria}
-              onIonChange={onSearchByName}
-              placeholder="Search by name..."
+              onIonChange={doSearch}
             ></IonInput>
           </IonItem>
           <IonTitle style={stickyRight}> Employees </IonTitle>

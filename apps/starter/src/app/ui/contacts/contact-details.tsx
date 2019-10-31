@@ -11,7 +11,8 @@ import {
   IonLabel
 } from '@ionic/react';
 
-import { Contact, ContactsService } from '../+state';
+import { useObservable } from '@mindspace/core';
+import { ContactsFacade, injector, Contact } from '../../+state';
 
 import './contact-details.scss';
 
@@ -24,13 +25,12 @@ const gridItem = {
 export interface ContactDetailPage extends RouteComponentProps<{ id: string }> {}
 
 export const ContactDetails: React.FC<ContactDetailPage> = ({ match }) => {
-  const [service] = useState<ContactsService>(new ContactsService());
-  const [contact, setContact] = useState<Contact>({} as Contact);
+  const [facade] = useState<ContactsFacade>(injector.get(ContactsFacade));
+  const [contact, setContact$] = useObservable<Contact>(null, {} as Contact);
 
   useIonViewWillEnter(() => {
     // Use Router param `id` to lookup
-    const request$ = new ContactsService().getContactById(match.params.id);
-    request$.subscribe(who => setContact(who));
+    setContact$(facade.selectContact(match.params.id));
   });
 
   return (

@@ -5,9 +5,8 @@ import { IonReactRouter } from '@ionic/react-router';
 
 import './app.scss';
 
-import { ContactsList } from './contacts/contacts-list';
-import { ContactDetails } from './contacts/contact-detail';
-import { ContactsFacade } from './+state';
+import { ContactsList } from './ui/contacts/contacts-list';
+import { ContactDetails } from './ui/contacts/contact-details';
 
 export const App = () => {
   return (

@@ -1,7 +1,7 @@
 import React from 'react';
 import { IonAvatar, IonItem, IonLabel } from '@ionic/react';
 
-import { Contact } from '../+state/contacts.model';
+import { Contact } from '../../+state';
 
 interface ListItemProps {
   person: Contact;
