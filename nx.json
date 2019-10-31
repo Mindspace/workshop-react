@@ -1,0 +1,27 @@
+{
+  "npmScope": "react-workshop",
+  "implicitDependencies": {
+    "workspace.json": "*",
+    "package.json": "*",
+    "tsconfig.json": "*",
+    "tslint.json": "*",
+    "nx.json": "*"
+  },
+  "projects": {
+    "starter": {
+      "tags": []
+    },
+    "starter-e2e": {
+      "tags": []
+    },
+    "api": {
+      "tags": []
+    },
+    "api-interfaces": {
+      "tags": []
+    },
+    "core": {
+      "tags": []
+    }
+  }
+}
