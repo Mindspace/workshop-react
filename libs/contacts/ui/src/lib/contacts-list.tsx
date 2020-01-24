@@ -14,21 +14,30 @@ import { search } from 'ionicons/icons';
 
 import { inlineItem, iconOnLeft, stickyRight } from './styles';
 
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+
 import { ContactsService, injector, Contact } from '@workshop/contacts/data-access';
 import { ContactListItem } from './contact-item';
 
 export const ContactsList: React.FC = () => {
   const [service] = useState<ContactsService>(injector.get(ContactsService));
+  const [emitter] = useState<Subject<string>>(new Subject<string>());
   const [people, setPeople] = useState<Contact[]>([]);
   const doSearch = (e: CustomEvent<InputChangeEventDetail>) => {
     const criteria = e.detail.value;
-    const request$ = service.searchBy(criteria);
-    request$.subscribe(setPeople);
+    emitter.next(criteria);
   };
 
   useEffect(() => {
     const allContacts$ = service.getContacts();
-    allContacts$.subscribe(setPeople);
+    const searchTerm$ = emitter.asObservable().pipe(debounceTime(250), distinctUntilChanged());
+
+    allContacts$.subscribe((list) => setPeople(list));
+    searchTerm$.subscribe((term) => {
+      const search$ = service.searchBy(term);
+      search$.subscribe(setPeople);
+    });
   }, [service, setPeople]);
 
   return (
