@@ -14,8 +14,8 @@ import { search } from 'ionicons/icons';
 
 import { inlineItem, iconOnLeft, stickyRight } from './styles';
 
-import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Subject, merge } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 
 import { ContactsService, injector, Contact } from '@workshop/contacts/data-access';
 import { ContactListItem } from './contact-item';
@@ -30,14 +30,16 @@ export const ContactsList: React.FC = () => {
   };
 
   useEffect(() => {
-    const allContacts$ = service.getContacts();
-    const searchTerm$ = emitter.asObservable().pipe(debounceTime(250), distinctUntilChanged());
+    const term$ = emitter.asObservable();
+    const allContacts$ = service.getContacts().pipe(takeUntil(term$));
+    const searchTerm$ = term$.pipe(
+      debounceTime(250),
+      distinctUntilChanged(),
+      switchMap((criteria) => service.searchBy(criteria))
+    );
+    const watch = merge(allContacts$, searchTerm$).subscribe(setPeople);
 
-    allContacts$.subscribe((list) => setPeople(list));
-    searchTerm$.subscribe((term) => {
-      const search$ = service.searchBy(term);
-      search$.subscribe(setPeople);
-    });
+    return () => watch.unsubscribe();
   }, [service, setPeople]);
 
   return (
