@@ -15,7 +15,7 @@ import { search } from 'ionicons/icons';
 import { inlineItem, iconOnLeft, stickyRight } from './styles';
 
 import { Subject, merge } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 
 import { ContactsService, injector, Contact } from '@workshop/contacts/data-access';
 import { ContactListItem } from './contact-item';
@@ -24,19 +24,17 @@ export const ContactsList: React.FC = () => {
   const [service] = useState<ContactsService>(injector.get(ContactsService));
   const [emitter] = useState<Subject<string>>(new Subject<string>());
   const [people, setPeople] = useState<Contact[]>([]);
+  const [criteria, setCriteria] = useState<string>('');
   const doSearch = (e: CustomEvent<InputChangeEventDetail>) => {
     const criteria = e.detail.value;
+    setCriteria(criteria);
     emitter.next(criteria);
   };
 
   useEffect(() => {
     const term$ = emitter.asObservable();
     const allContacts$ = service.getContacts().pipe(takeUntil(term$));
-    const searchTerm$ = term$.pipe(
-      debounceTime(250),
-      distinctUntilChanged(),
-      switchMap((criteria) => service.searchBy(criteria))
-    );
+    const searchTerm$ = service.autoSearch(term$);
     const watch = merge(allContacts$, searchTerm$).subscribe(setPeople);
 
     return () => watch.unsubscribe();
@@ -51,6 +49,7 @@ export const ContactsList: React.FC = () => {
             <IonInput
               clearInput
               autofocus
+              value={criteria}
               style={iconOnLeft}
               onIonChange={doSearch}
               placeholder="Search by name..."

@@ -1,6 +1,6 @@
 import uuid from 'react-uuid';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, debounceTime, distinctUntilChanged, switchMap, delay } from 'rxjs/operators';
 
 import { InjectionToken } from '@mindspace-io/react';
 import { Contact } from '@workshop/shared/api';
@@ -63,6 +63,24 @@ export class ContactsService {
       }, null);
 
     return !contacts.length ? this.getContacts().pipe(map(scanContact)) : of(scanContact(contacts));
+  }
+
+  updateContact(contact: Contact): Observable<Contact> {
+    return of({ ...contact }).pipe(delay(700));
+  }
+
+  /**
+   * Watch input stream, apply biz rules and then
+   * search for Contacts with partial name terms
+   * @param term$
+   * @param debounceMs
+   */
+  autoSearch(term$: Observable<string>, debounceMs = 250): Observable<Contact[]> {
+    return term$.pipe(
+      debounceTime(debounceMs),
+      distinctUntilChanged(),
+      switchMap(term => this.searchBy(term))
+    );
   }
 
   /**
