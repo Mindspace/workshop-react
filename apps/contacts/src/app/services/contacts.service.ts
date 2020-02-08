@@ -1,33 +1,40 @@
 import uuid from 'react-uuid';
+import { Contact } from './contacts.model';
 import { CONTACTS } from './data/contacts';
 
 /**
  * Internal state for singleton ContactsService
  */
-let contacts = [];
+let contacts: Contact[] = [];
 
 const API_ENDPOINT = 'https://uifaces.co/api?limit=25;';
 const API_KEY = '873771d7760b846d51d025ac5804ab';
 
-async function fetchContacts(params, options) {
-  const url = options.apiEndPoint + (params.userName ? `&name=${params.userName}` : '');
-  console.log(`GET ${url}`);
+export interface QueryParams {
+  userName: string;
+  title?: string;
+}
+export interface QueryOptions {
+  apiKey: string;
+  apiEndPoint: string;
+}
 
-  // const headers = { headers: { 'x-API-KEY': options.apiKey } };
-  // const result = await fetch(url, headers);
-  // const data = await result.json();
-  // return <T>data;
+function fetchContacts({ userName }: QueryParams, options: QueryOptions): Promise<Contact[]> {
+  console.log(`GET ${options.apiEndPoint}&name=${userName || ''}`);
 
   return Promise.resolve(CONTACTS);
 }
 
 export class ContactsService {
+  private apiEndPoint = API_ENDPOINT;
+  private apiKey = API_KEY;
+
   /**
    * Load a list from the REST service...
    */
-  getContacts(useCache = false, params = null) {
+  getContacts(useCache = false, params: QueryParams = null): Promise<Contact[]> {
     const goFetch = () => {
-      params = params || {};
+      params = params || ({} as QueryParams);
       return this.loadContacts(params).then(list => {
         return (contacts = assignUIDs(list));
       });
@@ -37,7 +44,7 @@ export class ContactsService {
     return contacts.length && useCache ? Promise.resolve(contacts) : goFetch();
   }
 
-  getContactById(id) {
+  getContactById(id: string): Promise<Contact | null> {
     const who = !!contacts
       ? contacts.reduce((result, it) => {
           return result || (it.id === id ? it : null);
@@ -51,9 +58,9 @@ export class ContactsService {
    * @param userName
    * @param title
    */
-  searchBy(userName, title = '') {
-    const filterByName = (who): boolean => (userName ? contains(who.name, userName) : true);
-    const filterByTitle = (who): boolean => (title ? contains(who.position, title) : true);
+  searchBy(userName: string, title: string = ''): Promise<Contact[]> {
+    const filterByName = (who: Contact): boolean => (userName ? contains(who.name, userName) : true);
+    const filterByTitle = (who: Contact): boolean => (title ? contains(who.position, title) : true);
 
     return this.getContacts(false, { userName, title }).then(list => {
       return !!list ? list.filter(filterByName).filter(filterByTitle) : [];
@@ -63,10 +70,9 @@ export class ContactsService {
   /**
    * internal wrapper to fetch function...
    */
-  private loadContacts(params) {
-    const apiEndPoint = API_ENDPOINT;
-    const apiKey = API_KEY;
-    return fetchContacts(params || {}, { apiEndPoint, apiKey });
+  private loadContacts(params: QueryParams): Promise<Contact[]> {
+    const { apiEndPoint, apiKey } = this;
+    return fetchContacts(params, { apiEndPoint, apiKey });
   }
 }
 
@@ -75,7 +81,7 @@ export class ContactsService {
  * by the remote service
  * @param list
  */
-function assignUIDs(list) {
+function assignUIDs(list: Contact[]): Contact[] {
   return list.map(it => {
     it.id = uuid();
     return it;
@@ -88,6 +94,6 @@ function assignUIDs(list) {
  * @param target
  * @param partial
  */
-function contains(target, partial) {
+function contains(target: string, partial: string): boolean {
   return target.toLowerCase().indexOf(partial.toLowerCase()) > -1;
 }

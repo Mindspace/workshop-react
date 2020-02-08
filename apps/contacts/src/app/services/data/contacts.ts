@@ -1,4 +1,6 @@
-export const CONTACTS = [
+import { Contact } from '../contacts.model';
+
+export const CONTACTS: Contact[] = [
   {
     name: 'Muhammed Sizemore',
     email: 'muhammed.sizemore@gmail.com',
