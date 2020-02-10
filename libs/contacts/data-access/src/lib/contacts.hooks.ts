@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import * as H from 'history';
+import { useState, useEffect, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useParams } from 'react-router';
 
-import * as H from 'history';
 import { Contact } from '@workshop/shared/api';
+
+import { ContactsContext } from './contacts.injector';
 import { ContactsService } from './contacts.service';
 
 /**
@@ -18,8 +20,8 @@ export type ContactDetailsResult = [Contact, H.History<H.LocationState>];
 export function useContactDetailHook(): ContactDetailsResult {
   const { id } = useParams();
   const history = useHistory();
-  const [service] = useState(() => new ContactsService());
   const [contact, setContact] = useState<Contact>({} as Contact);
+  const service = useContext<ContactsService>(ContactsContext);
 
   useEffect(() => {
     service.getContactById(id).then(setContact);
@@ -32,9 +34,9 @@ export function useContactDetailHook(): ContactDetailsResult {
  * Custom React Hook useful to search and load Contacts
  */
 export function useContactsHook(): ContactHookResults {
-  const [service] = useState(() => new ContactsService());
   const [criteria, setCriteria] = useState<string>('');
   const [people, setPeople] = useState<Contact[]>([]);
+  const service = useContext<ContactsService>(ContactsContext);
 
   useEffect(() => {
     service.searchBy(criteria).then(setPeople);
