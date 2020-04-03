@@ -11,23 +11,15 @@ import {
   IonInput,
 } from '@ionic/react';
 
-import { useObservable } from '@mindspace-io/react';
-import { InputChangeEventDetail } from '@ionic/core';
-
 import { search } from 'ionicons/icons';
 import { inlineItem, iconOnLeft, stickyRight } from './styles';
 
-import { injector, Contact, ContactsFacade } from '@workshop/contacts/data-access';
+import { useContacts } from '@workshop/contacts/data-access';
 import { ContactListItem } from './contact-item';
+import { InputChangeEventDetail } from '@ionic/core';
 
 export const ContactsList: React.FC = () => {
-  const facade: ContactsFacade = injector.get(ContactsFacade);
-  const [criteria] = useObservable<string>(facade.criteria$, '');
-  const [people] = useObservable<Contact[]>(facade.contacts$, []);
-  const doSearch = (e: CustomEvent<InputChangeEventDetail>) => {
-    const criteria = e.detail.value;
-    facade.searchFor(criteria);
-  };
+  const [criteria, people, facade] = useContacts();
 
   return (
     <IonPage>
@@ -40,7 +32,7 @@ export const ContactsList: React.FC = () => {
               autofocus
               value={criteria}
               style={iconOnLeft}
-              onIonChange={doSearch}
+              onIonChange={(e: CustomEvent<InputChangeEventDetail>) => facade.searchFor(e.detail.value)}
               placeholder="Search by name..."
             ></IonInput>
           </IonItem>
