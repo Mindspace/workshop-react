@@ -10,35 +10,34 @@ import {
   IonIcon,
   IonInput,
 } from '@ionic/react';
-import { search } from 'ionicons/icons';
-
-import { inlineItem, iconOnLeft, stickyRight } from './styles';
+import { InputChangeEventDetail } from '@ionic/core';
 
 import { Subject, merge } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { ContactsService, injector, Contact } from '@workshop/contacts/data-access';
+import { useObservable } from '@mindspace-io/react';
+
+import { Contact, injector, ContactsService } from '@workshop/contacts/data-access';
 import { ContactListItem } from './contact-item';
 
+import { search } from 'ionicons/icons';
+import { inlineItem, iconOnLeft, stickyRight } from './styles';
+
 export const ContactsList: React.FC = () => {
-  const [service] = useState<ContactsService>(injector.get(ContactsService));
+  const [people, setPeople$] = useObservable<Contact[]>(null, []);
+  const [criteria, setCriteria$] = useObservable<string>(null, '');
   const [emitter] = useState<Subject<string>>(new Subject<string>());
-  const [people, setPeople] = useState<Contact[]>([]);
-  const [criteria, setCriteria] = useState<string>('');
-  const doSearch = (e: CustomEvent<InputChangeEventDetail>) => {
-    const criteria = e.detail.value;
-    setCriteria(criteria);
-    emitter.next(criteria);
-  };
+  const [service] = useState<ContactsService>(injector.get(ContactsService));
+  const doSearch = (e: CustomEvent<InputChangeEventDetail>) => emitter.next(e.detail.value);
 
   useEffect(() => {
     const term$ = emitter.asObservable();
     const allContacts$ = service.getContacts().pipe(takeUntil(term$));
     const searchTerm$ = service.autoSearch(term$);
-    const watch = merge(allContacts$, searchTerm$).subscribe(setPeople);
 
-    return () => watch.unsubscribe();
-  }, [service, setPeople]);
+    setCriteria$(term$);
+    setPeople$(merge(allContacts$, searchTerm$));
+  }, [service, setPeople$, setCriteria$]);
 
   return (
     <IonPage>

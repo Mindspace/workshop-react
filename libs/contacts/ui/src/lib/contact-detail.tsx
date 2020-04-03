@@ -3,6 +3,7 @@ import { RouteComponentProps, Redirect, useParams } from 'react-router';
 import { useHistory } from 'react-router-dom';
 
 import Mousetrap from 'mousetrap';
+import { useObservable } from '@mindspace-io/react';
 
 import { IonPage, IonFooter, IonButton, IonCard, IonCardContent, IonAvatar, IonLabel } from '@ionic/react';
 
@@ -15,14 +16,14 @@ export interface ContactDetailProps extends RouteComponentProps<{ id: string }> 
 
 export const ContactDetails: React.FC<ContactDetailProps> = () => {
   const [service] = useState<ContactsService>(injector.get(ContactsService));
-  const [contact, setContact] = useState<Contact>({} as Contact);
-  const history = useHistory();
+  const [contact, setContact$] = useObservable<Contact>(null, {} as Contact);
   const { id } = useParams();
+  const history = useHistory();
 
   // Use Router param `id` to lookup
   useEffect(() => {
-    service.getContactById(id).subscribe(setContact);
-  }, [id, service, setContact]);
+    setContact$(service.getContactById(id));
+  }, [id, service, setContact$]);
 
   // 'Esc' keyboard shortcut to close the popup
   useEffect(() => {
