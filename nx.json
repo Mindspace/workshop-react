@@ -18,5 +18,13 @@
     "contacts": {
       "tags": ["scope:contacts", "type:app"]
     }
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/workspace/tasks-runners/default",
+      "options": {
+        "cacheableOperations": ["build", "lint", "test", "e2e"]
+      }
+    }
   }
 }

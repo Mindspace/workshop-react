@@ -18,7 +18,8 @@
             "assets": ["apps/contacts/src/favicon.ico", "apps/contacts/src/assets"],
             "styles": ["apps/contacts/src/styles.scss"],
             "scripts": [],
-            "webpackConfig": "./webpack.config.js"
+            "webpackConfig": "./webpack.config.js",
+            "buildLibsFromSource": true
           },
           "configurations": {
             "production": {
