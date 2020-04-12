@@ -1,4 +1,4 @@
 export * from '@workshop/shared/api';
 export * from './lib/contacts.service';
-export * from './lib/contacts.hooks';
 export * from './lib/contacts.injector';
+export * from './lib/contacts.hooks';

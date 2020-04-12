@@ -12,7 +12,7 @@ import { ContactsService } from './contacts.service';
  * Define tuple types
  */
 export type ContactHookResults = [Contact[], (criteria: string) => void];
-export type ContactDetailsResult = [Contact, H.History<H.LocationState>];
+export type ContactDetailsResult = [Contact, H.History];
 
 /**
  * Custom React Hook useful to load Contact details
@@ -25,7 +25,7 @@ export function useContactDetailHook(): ContactDetailsResult {
 
   useEffect(() => {
     service.getContactById(id).then(setContact);
-  }, [id]);
+  }, [id, service, setContact]);
 
   return [contact, history];
 }

@@ -59,7 +59,7 @@ export class ContactsService {
    * @param userName
    * @param title
    */
-  searchBy(userName: string, title: string = ''): Promise<Contact[]> {
+  searchBy(userName: string, title = ''): Promise<Contact[]> {
     const filterByName = (who: Contact): boolean => (userName ? contains(who.name, userName) : true);
     const filterByTitle = (who: Contact): boolean => (title ? contains(who.position, title) : true);
 
