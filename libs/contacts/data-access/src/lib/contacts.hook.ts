@@ -1,6 +1,7 @@
+import Mousetrap from 'mousetrap';
 import { useHistory } from 'react-router-dom';
 import { useParams } from 'react-router';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, DependencyList, useCallback } from 'react';
 import { useObservable } from '@mindspace-io/react';
 
 import { Contact } from '@workshop/shared/api';
@@ -29,4 +30,16 @@ export function useContactDetails(): ContactDetailsTuple {
   }, [id, facade]);
 
   return [contact, history];
+}
+
+/**
+ * Support global keyboard shortcuts... auto-cleanup when view unmounts
+ */
+export function useMouseTrap(shortcut: string[] | string, handler: () => void, deps: DependencyList = []) {
+  const memoFn = useCallback(handler, deps);
+
+  useEffect(() => {
+    Mousetrap.bind(shortcut, memoFn);
+    return () => Mousetrap.unbind(shortcut);
+  }, [memoFn]);
 }

@@ -1,25 +1,19 @@
-import React, { useEffect } from 'react';
-import { RouteComponentProps, Redirect } from 'react-router';
-
+import React from 'react';
+import { RouteComponentProps, Redirect, useHistory } from 'react-router';
 import { IonPage, IonFooter, IonButton, IonCard, IonCardContent, IonAvatar, IonLabel } from '@ionic/react';
-import { useContactDetails } from '@workshop/contacts/data-access';
 
-import Mousetrap from 'mousetrap';
-
+import { useContactDetails, useMouseTrap } from '@workshop/contacts/data-access';
 import './contact-detail.scss';
 import { gridItem } from './styles';
 
 export interface ContactDetailProps extends RouteComponentProps<{ id: string }> {}
 
 export const ContactDetails: React.FC<ContactDetailProps> = () => {
-  const [contact, history] = useContactDetails();
+  const [contact, navigate] = useContactDetails();
+  const history = useHistory();
 
   // 'Esc' keyboard shortcut to close the popup
-  useEffect(() => {
-    const key = 'esc';
-    Mousetrap.bind([key], () => history.goBack());
-    return () => Mousetrap.unbind([key]);
-  }, [history]);
+  useMouseTrap('esc', () => navigate.goBack(), [history.location]);
 
   return contact ? (
     <IonPage style={gridItem} className="contactDetails">
