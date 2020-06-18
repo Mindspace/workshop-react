@@ -29,7 +29,7 @@
     "@ionic/core": "^4.11.10",
     "@ionic/react": "^4.11.10",
     "@ionic/react-router": "^4.11.10",
-    "@mindspace-io/react": "^1.1.5",
+    "@mindspace-io/react": "^1.1.6",
     "express": "4.17.1",
     "immer": "^5.3.6",
     "ionicons": "^4.6.4-1",
