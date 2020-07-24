@@ -18,8 +18,7 @@
             "assets": ["apps/contacts/src/favicon.ico", "apps/contacts/src/assets"],
             "styles": ["apps/contacts/src/styles.scss"],
             "scripts": [],
-            "webpackConfig": "./webpack.config.js",
-            "buildLibsFromSource": true
+            "webpackConfig": "@nrwl/react/plugins/webpack"
           },
           "configurations": {
             "production": {
@@ -62,16 +61,14 @@
           "builder": "@nrwl/linter:lint",
           "options": {
             "linter": "eslint",
-            "config": "apps/contacts/.eslintrc",
             "tsConfig": ["apps/contacts/tsconfig.app.json", "apps/contacts/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**", "!apps/contacts/**"]
+            "exclude": ["**/node_modules/**", "!apps/contacts/**/*"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/contacts/jest.config.js",
-            "tsConfig": "apps/contacts/tsconfig.spec.json",
             "passWithNoTests": true
           }
         }
@@ -99,9 +96,8 @@
           "builder": "@nrwl/linter:lint",
           "options": {
             "linter": "eslint",
-            "config": "apps/contacts-e2e/.eslintrc",
             "tsConfig": ["apps/contacts-e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**", "!apps/contacts-e2e/**"]
+            "exclude": ["**/node_modules/**", "!apps/contacts-e2e/**/*"]
           }
         }
       }
@@ -127,12 +123,15 @@
         "linter": "eslint",
         "babel": true
       },
-      "component": {
-        "style": "scss"
-      },
       "library": {
         "style": "scss",
         "linter": "eslint"
+      },
+      "storybook-configuration": {
+        "linter": "eslint"
+      },
+      "component": {
+        "style": "scss"
       }
     },
     "@nrwl/next": {
@@ -148,6 +147,14 @@
     "@nrwl/node": {
       "application": {
         "linter": "eslint"
+      },
+      "library": {
+        "linter": "eslint"
+      }
+    },
+    "@nrwl/nx-plugin": {
+      "plugin": {
+        "linter": "eslint"
       }
     },
     "@nrwl/nest": {
@@ -157,6 +164,9 @@
     },
     "@nrwl/express": {
       "application": {
+        "linter": "eslint"
+      },
+      "library": {
         "linter": "eslint"
       }
     }

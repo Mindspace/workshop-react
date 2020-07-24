@@ -4,9 +4,10 @@
   "parserOptions": {
     "ecmaVersion": 2018,
     "sourceType": "module",
-    "project": "./tsconfig.json"
+    "project": "./tsconfig.base.json"
   },
-  "plugins": ["@typescript-eslint", "@nrwl/nx", "@nrwl/eslint-plugin-nx"],
+  "ignorePatterns": ["**/*"],
+  "plugins": ["@typescript-eslint", "@nrwl/nx"],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
@@ -21,18 +22,30 @@
     "@nrwl/nx/enforce-module-boundaries": [
       "error",
       {
+        "enforceBuildableLibDependency": true,
         "allow": [],
         "depConstraints": [
-          { "sourceTag": "scope:contacts", "onlyDependOnLibsWithTags": ["scope:contacts"] },
-          { "sourceTag": "type:e2e", "onlyDependOnLibsWithTags": ["type:app"] },
-          { "sourceTag": "type:app", "onlyDependOnLibsWithTags": ["type:feature", "type:util"] },
+          {
+            "sourceTag": "scope:contacts",
+            "onlyDependOnLibsWithTags": ["scope:contacts"]
+          },
+          {
+            "sourceTag": "type:e2e",
+            "onlyDependOnLibsWithTags": ["type:app"]
+          },
+          {
+            "sourceTag": "type:app",
+            "onlyDependOnLibsWithTags": ["type:feature", "type:util"]
+          },
           {
             "sourceTag": "type:feature",
             "onlyDependOnLibsWithTags": ["type:data-access", "type:ui", "type:util", "scope:shared"]
           },
-          { "sourceTag": "type:data-access", "onlyDependOnLibsWithTags": ["type:util", "scope:shared"] }
-        ],
-        "enforceBuildableLibDependency": true
+          {
+            "sourceTag": "type:data-access",
+            "onlyDependOnLibsWithTags": ["type:util", "scope:shared"]
+          }
+        ]
       }
     ]
   },
