@@ -20,7 +20,7 @@ export interface QueryOptions {
   apiEndPoint: string;
 }
 
-function fetchContacts({ userName }: QueryParams, options: QueryOptions): Promise<Contact[]> {
+function fetchContacts(userName: string, options: QueryOptions): Promise<Contact[]> {
   console.log(`GET ${options.apiEndPoint}&name=${userName || ''}`);
 
   return Promise.resolve(CONTACTS);
@@ -35,8 +35,7 @@ export class ContactsService {
    */
   getContacts(useCache = false, params: QueryParams = null): Promise<Contact[]> {
     const goFetch = () => {
-      params = params || ({} as QueryParams);
-      return this.loadContacts(params).then(list => {
+      return this.loadContacts(params).then((list) => {
         return (contacts = assignUIDs(list));
       });
     };
@@ -63,7 +62,7 @@ export class ContactsService {
     const filterByName = (who: Contact): boolean => (userName ? contains(who.name, userName) : true);
     const filterByTitle = (who: Contact): boolean => (title ? contains(who.position, title) : true);
 
-    return this.getContacts(false, { userName, title }).then(list => {
+    return this.getContacts(false, { userName, title }).then((list) => {
       return !!list ? list.filter(filterByName).filter(filterByTitle) : [];
     });
   }
@@ -71,9 +70,9 @@ export class ContactsService {
   /**
    * internal wrapper to fetch function...
    */
-  private loadContacts(params: QueryParams): Promise<Contact[]> {
+  private loadContacts(params: QueryParams | null): Promise<Contact[]> {
     const { apiEndPoint, apiKey } = this;
-    return fetchContacts(params, { apiEndPoint, apiKey });
+    return fetchContacts(params ? params.userName : '', { apiEndPoint, apiKey });
   }
 }
 
@@ -83,7 +82,7 @@ export class ContactsService {
  * @param list
  */
 function assignUIDs(list: Contact[]): Contact[] {
-  return list.map(it => {
+  return list.map((it) => {
     it.id = uuid();
     return it;
   });

@@ -128,6 +128,30 @@
         }
       }
     },
+    "contacts-ui": {
+      "root": "libs/contacts/ui",
+      "sourceRoot": "libs/contacts/ui/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "tsConfig": ["libs/contacts/ui/tsconfig.lib.json", "libs/contacts/ui/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!libs/contacts/ui/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/contacts/ui/jest.config.js",
+            "tsConfig": "libs/contacts/ui/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
     "shared-api": {
       "root": "libs/shared/api",
       "sourceRoot": "libs/shared/api/src",

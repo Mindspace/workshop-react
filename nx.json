@@ -26,6 +26,9 @@
     },
     "shared-api": {
       "tags": ["scope:shared", "type:api"]
+    },
+    "contacts-ui": {
+      "tags": ["type:feature", "scope:contacts"]
     }
   },
   "tasksRunnerOptions": {
