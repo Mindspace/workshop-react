@@ -63,7 +63,7 @@ export class ContactsService {
     const filterByTitle = (who: Contact): boolean => (title ? contains(who.position, title) : true);
 
     return this.getContacts(false, { userName, title }).then((list) => {
-      return !!list ? list.filter(filterByName).filter(filterByTitle) : [];
+      return list.filter(filterByName).filter(filterByTitle);
     });
   }
 

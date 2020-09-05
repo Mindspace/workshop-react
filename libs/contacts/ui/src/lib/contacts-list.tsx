@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   IonContent,
   IonHeader,
@@ -15,24 +15,11 @@ import { search } from 'ionicons/icons';
 
 import { inlineItem, iconOnLeft, stickyRight } from './styles';
 
-import { ContactsService } from '@workshop/contacts/data-access';
+import { useContactsHook } from '@workshop/contacts/data-access';
 import { ContactListItem } from './contact-item';
 
 export const ContactsList: React.FC = () => {
-  const [service] = useState(() => new ContactsService());
-  const [people, setPeople] = useState([]);
-  // const doSearch = (e: Event) => {
-  //   const criteria = (e.target as HTMLIonInputElement).value as string;
-  //   service.searchBy(criteria).then(setPeople);
-  // };
-  const doSearch = (e: CustomEvent<InputChangeEventDetail>) => {
-    const criteria = e.detail.value;
-    service.searchBy(criteria).then(setPeople);
-  };
-
-  useEffect(() => {
-    service.getContacts().then(setPeople);
-  }, [service, setPeople]);
+  const [people, doSearch] = useContactsHook();
 
   return (
     <IonPage>
@@ -44,7 +31,7 @@ export const ContactsList: React.FC = () => {
               clearInput
               autofocus
               style={iconOnLeft}
-              onIonChange={doSearch}
+              onIonChange={(e) => doSearch(e.detail.value)}
               placeholder="Search by name..."
             ></IonInput>
           </IonItem>

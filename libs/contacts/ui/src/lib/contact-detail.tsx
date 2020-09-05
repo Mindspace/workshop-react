@@ -1,28 +1,16 @@
+import React, { useEffect } from 'react';
+import { Redirect } from 'react-router';
+
+import Mousetrap from 'mousetrap';
+import { IonPage, IonFooter, IonButton, IonCard, IonCardContent, IonAvatar, IonLabel } from '@ionic/react';
+
+import { useContactDetailHook } from '@workshop/contacts/data-access';
+
 import './contact-detail.scss';
 import { gridItem } from './styles';
 
-import Mousetrap from 'mousetrap';
-import React, { useState, useEffect } from 'react';
-import { RouteComponentProps, Redirect, useParams } from 'react-router';
-import { useHistory } from 'react-router-dom';
-
-import { IonPage, IonFooter, IonButton, IonCard, IonCardContent, IonAvatar, IonLabel } from '@ionic/react';
-import { Contact, ContactsService } from '@workshop/contacts/data-access';
-
-export interface ContactDetailProps extends RouteComponentProps<{ id: string }> {}
-
-export const ContactDetails: React.FC<ContactDetailProps> = ({ match }) => {
-  const [contact, setContact] = useState<Contact>({} as Contact);
-  const history = useHistory();
-  const { id } = useParams();
-
-  // Use Router param `id` to lookup
-  useEffect(() => {
-    const service = new ContactsService();
-    const request = service.getContactById(id);
-
-    request.then(who => setContact(who));
-  }, [id]);
+export const ContactDetails: React.FC = () => {
+  const [contact, history] = useContactDetailHook();
 
   // 'Esc' keyboard shortcut to close the popup
   useEffect(() => {
