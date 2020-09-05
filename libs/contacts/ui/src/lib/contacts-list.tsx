@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   IonContent,
   IonHeader,
@@ -10,63 +10,54 @@ import {
   IonIcon,
   IonInput,
 } from '@ionic/react';
-import { search } from 'ionicons/icons';
 import { InputChangeEventDetail } from '@ionic/core';
+import { search } from 'ionicons/icons';
 
 import { inlineItem, iconOnLeft, stickyRight } from './styles';
-import { ContactListItem } from './contact-item';
 
 import { ContactsService } from '@workshop/contacts/data-access';
+import { ContactListItem } from './contact-item';
 
-export class ContactsList extends React.Component {
-  private service = new ContactsService();
+export const ContactsList: React.FC = () => {
+  const [service] = useState(() => new ContactsService());
+  const [people, setPeople] = useState([]);
+  // const doSearch = (e: Event) => {
+  //   const criteria = (e.target as HTMLIonInputElement).value as string;
+  //   service.searchBy(criteria).then(setPeople);
+  // };
+  const doSearch = (e: CustomEvent<InputChangeEventDetail>) => {
+    const criteria = e.detail.value;
+    service.searchBy(criteria).then(setPeople);
+  };
 
-  constructor(props) {
-    super(props);
-    this.state = { people: [] };
-  }
+  useEffect(() => {
+    service.getContacts().then(setPeople);
+  }, [service, setPeople]);
 
-  componentDidMount() {
-    this.service.getContacts().then((list) => {
-      this.setState({ people: list });
-    });
-  }
-
-  render() {
-    const doSearch = (criteria) => {
-      this.service.searchBy(criteria).then((list) => {
-        this.setState({ people: list });
-      });
-    };
-    const people = this.state['people'];
-
-    return (
-      <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <IonItem style={inlineItem}>
-              <IonIcon icon={search.md}></IonIcon>
-              <IonInput
-                clearInput
-                autofocus
-                style={iconOnLeft}
-                onIonChange={(e: CustomEvent<InputChangeEventDetail>) => doSearch(e.detail.value)}
-                placeholder="Search by name..."
-              ></IonInput>
-            </IonItem>
-            <IonTitle style={stickyRight}> Employees </IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent>
-          <IonList>
-            {people.map((person, idx) => {
-              return <ContactListItem key={idx} person={person} />;
-            })}
-          </IonList>
-        </IonContent>
-      </IonPage>
-    );
-  }
-}
-
-export default ContactsList;
+  return (
+    <IonPage>
+      <IonHeader>
+        <IonToolbar>
+          <IonItem style={inlineItem}>
+            <IonIcon icon={search.md}></IonIcon>
+            <IonInput
+              clearInput
+              autofocus
+              style={iconOnLeft}
+              onIonChange={doSearch}
+              placeholder="Search by name..."
+            ></IonInput>
+          </IonItem>
+          <IonTitle style={stickyRight}> Employees </IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent>
+        <IonList>
+          {people.map((person, idx) => {
+            return <ContactListItem key={idx} person={person} />;
+          })}
+        </IonList>
+      </IonContent>
+    </IonPage>
+  );
+};

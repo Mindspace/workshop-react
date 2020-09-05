@@ -9,6 +9,7 @@ interface ListItemProps {
 
 export const ContactListItem: React.FC<ListItemProps> = ({ person }) => {
   const url = `/contacts/${person.id}`;
+
   return (
     <IonItem routerLink={url}>
       <IonAvatar slot="start">
