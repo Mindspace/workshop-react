@@ -22,11 +22,13 @@ export const ContactsList: React.FC = () => {
   const [people, setPeople] = useState<Contact[]>([]);
   const doSearch = (e: CustomEvent<InputChangeEventDetail>) => {
     const criteria = e.detail.value;
-    service.searchBy(criteria).then(setPeople);
+    const request$ = service.searchBy(criteria);
+    request$.subscribe(setPeople);
   };
 
   useEffect(() => {
-    service.getContacts().then(setPeople);
+    const allContacts$ = service.getContacts();
+    allContacts$.subscribe(setPeople);
   }, [service, setPeople]);
 
   return (

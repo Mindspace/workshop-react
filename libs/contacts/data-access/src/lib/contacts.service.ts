@@ -1,4 +1,6 @@
 import uuid from 'react-uuid';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { InjectionToken } from '@mindspace-io/react';
 import { Contact } from '@workshop/shared/api';
@@ -34,24 +36,33 @@ export class ContactsService {
   /**
    * Load a list from the REST service...
    */
-  getContacts(useCache = false, params: QueryParams = null): Promise<Contact[]> {
-    const goFetch = () => {
-      return this.loadContacts(params).then((list) => {
-        return (contacts = assignUIDs(list));
-      });
-    };
+  getContacts(useCache = false, params: QueryParams = null): Observable<Contact[]> {
+    const request$ = new Observable<Contact[]>((subscriber) => {
+      let shouldNotify = true;
+      this.loadContacts(params)
+        .then((list) => {
+          if (shouldNotify) {
+            subscriber.next((contacts = assignUIDs(list)));
+            subscriber.complete();
+          }
+        })
+        .catch(subscriber.error);
+      return () => {
+        shouldNotify = false;
+      };
+    });
 
     // Use cached list
-    return contacts.length && useCache ? Promise.resolve(contacts) : goFetch();
+    return contacts.length && useCache ? of(contacts) : request$;
   }
 
-  getContactById(id: string): Promise<Contact | null> {
+  getContactById(id: string): Observable<Contact | null> {
     const scanContact = (contacts) =>
       (contacts || []).reduce((result, it) => {
         return result || (it.id === id ? it : null);
       }, null);
 
-    return !contacts.length ? this.getContacts().then(scanContact) : Promise.resolve(scanContact(contacts));
+    return !contacts.length ? this.getContacts().pipe(map(scanContact)) : of(scanContact(contacts));
   }
 
   /**
@@ -59,13 +70,14 @@ export class ContactsService {
    * @param userName
    * @param title
    */
-  searchBy(userName: string, title = ''): Promise<Contact[]> {
+  searchBy(userName: string, title: string = ''): Observable<Contact[]> {
     const filterByName = (who: Contact): boolean => (userName ? contains(who.name, userName) : true);
     const filterByTitle = (who: Contact): boolean => (title ? contains(who.position, title) : true);
 
-    return this.getContacts(false, { userName, title }).then((list) => {
-      return list.filter(filterByName).filter(filterByTitle);
-    });
+    return this.getContacts(false, { userName, title }).pipe(
+      map((list) => list.filter(filterByName)),
+      map((list) => list.filter(filterByTitle))
+    );
   }
 
   /**
