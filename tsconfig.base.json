@@ -22,7 +22,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@workshop/contacts/data-access": ["libs/contacts/data-access/src/index.ts"]
+      "@workshop/contacts/data-access": ["libs/contacts/data-access/src/index.ts"],
+      "@workshop/shared/api": ["libs/shared/api/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

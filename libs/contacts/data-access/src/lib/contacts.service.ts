@@ -1,5 +1,6 @@
 import uuid from 'react-uuid';
-import { Contact } from './contacts.model';
+
+import { Contact } from '@workshop/shared/api';
 import { CONTACTS } from './data/contacts';
 
 /**

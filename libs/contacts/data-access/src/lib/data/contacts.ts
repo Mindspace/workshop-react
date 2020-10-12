@@ -1,4 +1,4 @@
-import { Contact } from '../contacts.model';
+import { Contact } from '@workshop/shared/api';
 
 export const CONTACTS: Contact[] = [
   {

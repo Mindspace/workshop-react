@@ -23,6 +23,9 @@
     },
     "contacts-data-access": {
       "tags": ["scope:contacts", "scope:shared", "type:data-access"]
+    },
+    "shared-api": {
+      "tags": ["scope:shared", "type:api"]
     }
   },
   "tasksRunnerOptions": {

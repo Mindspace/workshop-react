@@ -43,7 +43,7 @@
           },
           {
             "sourceTag": "type:data-access",
-            "onlyDependOnLibsWithTags": ["type:util", "scope:shared"]
+            "onlyDependOnLibsWithTags": ["type:util", "scope:shared", "type:api"]
           }
         ]
       }
