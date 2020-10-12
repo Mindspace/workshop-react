@@ -1,15 +1,12 @@
 import uuid from 'react-uuid';
 
+import { InjectionToken } from '@mindspace-io/react';
 import { Contact } from '@workshop/shared/api';
+
 import { CONTACTS } from './data/contacts';
 
-/**
- * Internal state for singleton ContactsService
- */
-let contacts: Contact[] = [];
-
-const API_ENDPOINT = 'https://uifaces.co/api?limit=25;';
-const API_KEY = '873771d7760b846d51d025ac5804ab';
+export const API_ENDPOINT = new InjectionToken('endpoint.ui-faces.com');
+export const API_KEY = new InjectionToken('api-key.ui-faces.com');
 
 export interface QueryParams {
   userName: string;
@@ -20,6 +17,11 @@ export interface QueryOptions {
   apiEndPoint: string;
 }
 
+/**
+ * Internal state for singleton ContactsService
+ */
+let contacts: Contact[] = [];
+
 function fetchContacts(userName: string, options: QueryOptions): Promise<Contact[]> {
   console.log(`GET ${options.apiEndPoint}&name=${userName || ''}`);
 
@@ -27,8 +29,7 @@ function fetchContacts(userName: string, options: QueryOptions): Promise<Contact
 }
 
 export class ContactsService {
-  private apiEndPoint = API_ENDPOINT;
-  private apiKey = API_KEY;
+  constructor(private apiEndPoint: string, private apiKey: string) {}
 
   /**
    * Load a list from the REST service...

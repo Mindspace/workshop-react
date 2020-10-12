@@ -1,11 +1,11 @@
 import * as H from 'history';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useParams } from 'react-router';
 
 import { Contact } from '@workshop/shared/api';
 
-import { ContactsContext } from './contacts.injector';
+import { injector } from './contacts.injector';
 import { ContactsService } from './contacts.service';
 
 /**
@@ -21,7 +21,7 @@ export function useContactDetailHook(): ContactDetailsResult {
   const { id } = useParams();
   const history = useHistory();
   const [contact, setContact] = useState<Contact>({} as Contact);
-  const service = useContext<ContactsService>(ContactsContext);
+  const [service] = useState(injector.get(ContactsService));
 
   useEffect(() => {
     service.getContactById(id).then(setContact);
@@ -36,7 +36,7 @@ export function useContactDetailHook(): ContactDetailsResult {
 export function useContactsHook(): ContactHookResults {
   const [criteria, setCriteria] = useState<string>('');
   const [people, setPeople] = useState<Contact[]>([]);
-  const service = useContext<ContactsService>(ContactsContext);
+  const [service] = useState(injector.get(ContactsService));
 
   useEffect(() => {
     service.searchBy(criteria).then(setPeople);
