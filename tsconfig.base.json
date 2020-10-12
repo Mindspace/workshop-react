@@ -21,7 +21,9 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@workshop/contacts/data-access": ["libs/contacts/data-access/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

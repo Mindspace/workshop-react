@@ -20,6 +20,9 @@
     },
     "contacts": {
       "tags": ["scope:contacts", "type:app"]
+    },
+    "contacts-data-access": {
+      "tags": ["scope:contacts", "scope:shared", "type:data-access"]
     }
   },
   "tasksRunnerOptions": {

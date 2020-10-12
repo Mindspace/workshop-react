@@ -2,10 +2,6 @@ import React from 'react';
 import { IonApp, IonContent } from '@ionic/react';
 
 import './app.scss';
-import { ContactsService } from './services/contacts.service';
-
-// @ts-ignore
-const contacts = new ContactsService().getContacts();
 
 export const App = () => {
   return (

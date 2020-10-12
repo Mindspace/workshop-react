@@ -69,6 +69,7 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/contacts/jest.config.js",
+            "tsConfig": "apps/contacts/tsconfig.spec.json",
             "passWithNoTests": true
           }
         }
@@ -98,6 +99,31 @@
             "linter": "eslint",
             "tsConfig": ["apps/contacts-e2e/tsconfig.e2e.json"],
             "exclude": ["**/node_modules/**", "!apps/contacts-e2e/**/*"]
+          }
+        }
+      }
+    },
+    "contacts-data-access": {
+      "root": "libs/contacts/data-access",
+      "sourceRoot": "libs/contacts/data-access/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "config": "libs/contacts/data-access/.eslintrc",
+            "tsConfig": ["libs/contacts/data-access/tsconfig.lib.json", "libs/contacts/data-access/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!libs/contacts/data-access/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/contacts/data-access/jest.config.js",
+            "tsConfig": "libs/contacts/data-access/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }
