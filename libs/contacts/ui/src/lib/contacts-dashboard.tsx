@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import { Route, Redirect, Switch } from 'react-router-dom';
 import { IonRouterOutlet } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 
@@ -10,9 +10,13 @@ export const ContactsDashboard: React.FC = () => {
   return (
     <IonReactRouter>
       <IonRouterOutlet>
-        <Route path="/contacts" exact component={ContactsList} />
-        <Route path="/contacts/:id" component={ContactDetails} />
-        <Redirect exact from="/" to="/contacts" />
+        <Switch>
+          <Route path="/" exact component={ContactsList} />
+          <Route path="/contacts" exact component={ContactsList} />
+          <Route path="/contacts/:id" exact component={ContactDetails} />
+
+          <Redirect from="*" to="/contacts" />
+        </Switch>
       </IonRouterOutlet>
     </IonReactRouter>
   );

@@ -14,6 +14,7 @@ export const CONTACTS: Contact[] = [
     photo: '/assets/avatars/2.jpg',
   },
   {
+    id: '432323420',
     name: 'Anne Mcfadden',
     email: 'anne.mcfadden@gmail.com',
     position: 'Accounting',

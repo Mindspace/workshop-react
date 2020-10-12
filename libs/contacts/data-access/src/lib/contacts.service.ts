@@ -46,12 +46,12 @@ export class ContactsService {
   }
 
   getContactById(id: string): Promise<Contact | null> {
-    const who = !!contacts
-      ? contacts.reduce((result, it) => {
-          return result || (it.id === id ? it : null);
-        }, null)
-      : null;
-    return Promise.resolve(who);
+    const scanContact = (contacts) =>
+      (contacts || []).reduce((result, it) => {
+        return result || (it.id === id ? it : null);
+      }, null);
+
+    return !contacts.length ? this.getContacts().then(scanContact) : Promise.resolve(scanContact(contacts));
   }
 
   /**
@@ -84,7 +84,7 @@ export class ContactsService {
  */
 function assignUIDs(list: Contact[]): Contact[] {
   return list.map((it) => {
-    it.id = uuid();
+    it.id = it.id || uuid();
     return it;
   });
 }

@@ -10,7 +10,6 @@ import {
   IonIcon,
   IonInput,
 } from '@ionic/react';
-import { InputChangeEventDetail } from '@ionic/core';
 import { search } from 'ionicons/icons';
 
 import { inlineItem, iconOnLeft, stickyRight } from './styles';

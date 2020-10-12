@@ -18,7 +18,7 @@ export type ContactDetailsResult = [Contact, H.History<H.LocationState>];
  * Custom React Hook useful to load Contact details
  */
 export function useContactDetailHook(): ContactDetailsResult {
-  const { id } = useParams();
+  const { id } = useParams<Contact>();
   const history = useHistory();
   const [contact, setContact] = useState<Contact>({} as Contact);
   const [service] = useState(injector.get(ContactsService));
