@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
   IonContent,
   IonHeader,
@@ -11,19 +11,14 @@ import {
   IonInput,
 } from '@ionic/react';
 import { search } from 'ionicons/icons';
-
-import { Contact } from '@workshop/shared/api';
-import { ContactsService } from '@workshop/contacts/data-access';
+import { InputChangeEventDetail } from '@ionic/core';
 
 import { inlineItem, iconOnLeft, stickyRight } from './styles';
 import { ContactListItem } from './contact-item';
-import { InputChangeEventDetail } from '@ionic/core';
 
-interface ContactsState {
-  people: Contact[];
-}
+import { ContactsService } from '@workshop/contacts/data-access';
 
-export class ContactsList extends Component<{}, ContactsState> {
+export class ContactsList extends React.Component {
   private service = new ContactsService();
 
   constructor(props) {
@@ -43,6 +38,7 @@ export class ContactsList extends Component<{}, ContactsState> {
         this.setState({ people: list });
       });
     };
+    const people = this.state['people'];
 
     return (
       <IonPage>
@@ -63,7 +59,7 @@ export class ContactsList extends Component<{}, ContactsState> {
         </IonHeader>
         <IonContent>
           <IonList>
-            {this.state.people.map((person, idx) => {
+            {people.map((person, idx) => {
               return <ContactListItem key={idx} person={person} />;
             })}
           </IonList>
@@ -73,6 +69,4 @@ export class ContactsList extends Component<{}, ContactsState> {
   }
 }
 
-// ************************
-// ContactList Styles
-// ************************
+export default ContactsList;

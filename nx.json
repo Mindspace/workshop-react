@@ -15,27 +15,57 @@
   },
   "projects": {
     "contacts-e2e": {
-      "tags": ["scope:contacts", "type:e2e"],
-      "implicitDependencies": ["contacts"]
+      "tags": [
+        "scope:contacts",
+        "type:e2e"
+      ],
+      "implicitDependencies": [
+        "contacts"
+      ]
     },
     "contacts": {
-      "tags": ["scope:contacts", "type:app"]
+      "tags": [
+        "scope:contacts",
+        "type:app"
+      ]
     },
     "contacts-data-access": {
-      "tags": ["scope:contacts", "scope:shared", "type:data-access"]
+      "tags": [
+        "scope:contacts",
+        "scope:shared",
+        "type:data-access"
+      ]
     },
     "shared-api": {
-      "tags": ["scope:shared", "type:api"]
+      "tags": [
+        "scope:shared",
+        "type:api"
+      ]
     },
     "contacts-ui": {
-      "tags": ["type:feature", "scope:contacts"]
+      "tags": [
+        "type:feature",
+        "scope:contacts"
+      ]
+    },
+    "contacts-ui-e2e": {
+      "tags": [],
+      "implicitDependencies": [
+        "contacts-ui"
+      ]
     }
   },
   "tasksRunnerOptions": {
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"]
+        "cacheableOperations": [
+          "build",
+          "lint",
+          "test",
+          "e2e",
+          "build-storybook"
+        ]
       }
     }
   }

@@ -20,3 +20,5 @@ export const ContactListItem: React.FC<ListItemProps> = ({ person }) => {
     </IonItem>
   );
 };
+
+export default ContactListItem;
