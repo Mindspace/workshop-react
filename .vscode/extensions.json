@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "nrwl.angular-console",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "ms-playwright.playwright",
+    "firsttris.vscode-jest-runner",
+    "bradlc.vscode-tailwindcss",
+    "meganrogge.template-string-converter",
+    "ms-vsliveshare.vsliveshare",
+    "eliostruyf.vscode-typescript-exportallmodules"
+  ]
+}
