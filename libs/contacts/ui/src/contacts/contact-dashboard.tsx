@@ -1,7 +1,8 @@
 import { Component } from 'react';
 import { ContactsService, Contact } from '@workshop/data-access';
 
-import '../styles.css';
+import { ContactsList } from './contact-list';
+import { ContactDetails } from './contact-details';
 
 interface ContactsState {
   people: Contact[];
@@ -23,9 +24,13 @@ export class ContactDashboard extends Component {
 
   render() {
     return (
-      <div className="grid grid-cols-3 gap-4 p-4">
-        <div className="col-span-1">{/* Contact List here */}</div>
-        <main className="col-span-2 flex flex-col">{/* List Details here */}</main>
+      <div className="grid grid-cols-3 gap-4 p-4 h-screen">
+        <div className="col-span-1">
+          <ContactsList />
+        </div>
+        <main className="col-span-2">
+          <ContactDetails />
+        </main>
       </div>
     );
   }
