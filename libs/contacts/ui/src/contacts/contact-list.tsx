@@ -1,6 +1,6 @@
+import { Component } from 'react';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { Contact, ContactsService } from '@workshop/data-access';
-import { Component } from 'react';
 
 import { ContactListItem } from './contact-list.item';
 

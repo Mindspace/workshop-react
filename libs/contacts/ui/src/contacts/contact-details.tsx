@@ -1,15 +1,9 @@
-import { Component } from 'react';
-import { Contact } from '@workshop/data-access';
+import { Component, ComponentClass } from 'react';
+import { withRouter, RouterProps } from '../utils';
 
-export type ContactDetailsProps = { contact?: Contact };
-
-export class ContactDetails extends Component<unknown, ContactDetailsProps> {
-  constructor(props: ContactDetailsProps) {
-    super(props);
-    this.state = { ...props };
-  }
-
+class ContactDetailsWithRouter extends Component<RouterProps, unknown> {
   render() {
+    const contactId = this.props.router?.params?.id;
     return (
       <div className="relative m-4 mt-6 h-96 flex-1 overflow-hidden rounded-xl border border-dashed border-gray-400 pt-10 text-center opacity-75 sm:px-0">
         <svg className="absolute inset-0 h-full w-full stroke-gray-900/10" fill="none">
@@ -32,8 +26,15 @@ export class ContactDetails extends Component<unknown, ContactDetailsProps> {
             height="100%"
           ></rect>
         </svg>
-        Contact Details Here
+        Contact <span className="p-4 font-bold text-blue-800">{contactId}</span> Details Here
       </div>
     );
   }
 }
+
+/*
+ * This is a special component that is used to wrap the ContactDetails component
+ * so that it can be used as a route element in the <Routes> component
+ */
+
+export const ContactDetails = withRouter(ContactDetailsWithRouter as unknown as ComponentClass);
