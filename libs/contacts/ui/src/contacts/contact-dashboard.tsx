@@ -1,9 +1,9 @@
 import React from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 
-import { ContactsService } from '@workshop/data-access';
+import { DependencyInjectionProvider } from '@mindspace/di';
+import { buildInjector } from '@workshop/data-access';
 
-import { ContactsContext } from './utils';
 import { ContactDetails } from './contact-details';
 import { ContactsList } from './contact-list';
 
@@ -11,7 +11,7 @@ export const ContactsDashboard: React.FC = () => {
   const location = useLocation();
 
   return (
-    <ContactsContext.Provider value={new ContactsService()}>
+    <DependencyInjectionProvider injector={buildInjector()}>
       <div>
         <div className="fixed inset-y-0 w-[320px] border-r border-neutral-200">
           <ContactsList />
@@ -25,6 +25,6 @@ export const ContactsDashboard: React.FC = () => {
           </Routes>
         </main>
       </div>
-    </ContactsContext.Provider>
+    </DependencyInjectionProvider>
   );
 };

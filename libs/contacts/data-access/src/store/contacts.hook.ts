@@ -1,13 +1,13 @@
-import { useState, useEffect, useCallback, useContext } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import { ContactsService, Contact } from '../services';
-import { ContactsContext } from './contact.injector';
+import { useDependencyInjector } from '@mindspace/di';
 
 /**
  * Custom React Hook useful to search and load Contacts
  */
 export function useContacts() {
-  const service = useContext<ContactsService | null>(ContactsContext);
+  const service = useDependencyInjector<ContactsService>(ContactsService);
   const [criteria, setCriteria] = useState<string>('');
   const [people, setPeople] = useState<Contact[]>([]);
   const [selectedId, setSelectedId] = useState<string>('');
@@ -41,7 +41,7 @@ export function useContacts() {
  * Custom React Hook useful to load Contact details
  */
 export function useContactDetails(id: string) {
-  const service = useContext<ContactsService | null>(ContactsContext);
+  const service = useDependencyInjector<ContactsService>(ContactsService);
   const [contact, setContact] = useState<Contact | null>(null);
 
   useEffect(() => {
