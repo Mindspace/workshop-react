@@ -31,22 +31,17 @@ export class ContactsService {
    * Load a list from the REST service...
    */
   async getContacts(useCache = false, params?: Record<string, string>): Promise<Contact[]> {
-    const goFetch = async () => {
-      params = params || {};
-      const list = await this.loadContacts(params);
-      return list;
-    };
-
     if (contacts.length && useCache) return contacts;
 
-    const results = await goFetch();
-    return (contacts = results);
+    contacts = await await this.loadContacts({});
+    return contacts;
   }
 
   async getContactById(id: string): Promise<Contact | null> {
-    const list = await this.getContacts(true);
-    const who = list.length
-      ? list.reduce((result: Contact | null, it: Contact) => {
+    if (contacts.length === 0) await this.getContacts(false);
+
+    const who = contacts.length
+      ? contacts.reduce((result: Contact | null, it: Contact) => {
           return result || (it.id === id ? it : null);
         }, null)
       : null;

@@ -1,39 +1,39 @@
-import { useState, useEffect, useCallback } from 'react';
-import { NavigateFunction } from 'react-router';
+import { useState, useEffect, useCallback, useContext } from 'react';
 
-import { ContactsService, Contact } from '@workshop/data-access';
-
-/**
- * Define tuple types
- */
-export type UseContactResults = [Contact[], string, (e: React.ChangeEvent<HTMLInputElement>) => void];
-export type UseContactDetailsResult = [Contact | null, NavigateFunction];
+import { ContactsService, Contact } from '../services';
+import { ContactsContext } from './contact.injector';
 
 /**
  * Custom React Hook useful to search and load Contacts
  */
 export function useContacts() {
-  const [service] = useState(() => new ContactsService());
+  const service = useContext<ContactsService | null>(ContactsContext);
   const [criteria, setCriteria] = useState<string>('');
   const [people, setPeople] = useState<Contact[]>([]);
-  const [selectedId, setSelectedId] = useState<string>('nll');
+  const [selectedId, setSelectedId] = useState<string>('');
 
   const doSearch = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const criteria = e.target.value;
       setCriteria(criteria);
-      service.searchBy(criteria).then(setPeople);
+      service?.searchBy(criteria).then(setPeople);
     },
     [service, setPeople],
   );
 
   useEffect(() => {
-    service.searchBy(criteria).then(setPeople);
+    service?.searchBy(criteria).then(setPeople);
   }, [criteria, service, setPeople]);
 
   return [
     { people, criteria, selectedId },
-    { doSearch, selectById: setSelectedId },
+    {
+      doSearch,
+      selectById: (id: string) => {
+        console.log('selectById', id);
+        setSelectedId(id);
+      },
+    },
   ] as const;
 }
 
@@ -41,13 +41,13 @@ export function useContacts() {
  * Custom React Hook useful to load Contact details
  */
 export function useContactDetails(id: string) {
-  const [service] = useState(() => new ContactsService());
+  const service = useContext<ContactsService | null>(ContactsContext);
   const [contact, setContact] = useState<Contact | null>(null);
 
   useEffect(() => {
     if (!id) return setContact(null);
 
-    service.getContactById(id).then((contact) => setContact(contact));
+    service?.getContactById(id).then((contact) => setContact(contact));
   }, [service, id]);
 
   return contact;

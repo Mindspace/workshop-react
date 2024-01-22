@@ -1,5 +1,5 @@
 import { useParams } from 'react-router';
-import { useContactDetails } from './contacts.hook';
+import { useContactDetails } from '../../../data-access/src/store/contacts.hook';
 
 export const ContactDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();

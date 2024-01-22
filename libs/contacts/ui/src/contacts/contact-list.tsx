@@ -1,7 +1,7 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 
 import { ContactListItem } from './contact-list.item';
-import { useContacts } from './contacts.hook';
+import { useContacts } from '@workshop/data-access';
 
 export const ContactsList: React.FC = () => {
   const [data, api] = useContacts();
