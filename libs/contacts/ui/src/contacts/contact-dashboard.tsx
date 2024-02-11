@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Contact, ContactsService } from '@workshop/data-access';
 
 import { ContactDetails } from './contact-details';
+import { ContactsList } from './contact-list';
 
 interface ContactsState {
   people: Contact[];
@@ -24,7 +25,9 @@ export class ContactDashboard extends Component {
   render() {
     return (
       <div>
-        <div className="fixed inset-y-0 w-[320px] border-r border-neutral-200">{/* ContactList here */}</div>
+        <div className="fixed inset-y-0 w-[320px] border-r border-neutral-200">
+          <ContactsList></ContactsList>
+        </div>
 
         <main className="flex min-h-screen flex-col pl-[320px] ">
           <ContactDetails />
