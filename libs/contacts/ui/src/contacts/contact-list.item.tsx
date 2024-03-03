@@ -3,12 +3,12 @@ import { cn } from '../utils';
 
 import { Contact } from '@workshop/data-access';
 
-interface ListItemProps {
+interface ContactListItemProps {
   person: Contact;
   isSelected?: boolean;
   onSelect?: (id: string) => void;
 }
-export const ContactListItem: React.FC<ListItemProps> = ({ person, isSelected, onSelect }) => {
+export const ContactListItem: React.FC<ContactListItemProps> = ({ person, isSelected, onSelect }) => {
   return (
     <NavLink
       to={`/contacts/${person.id}`}
@@ -17,7 +17,7 @@ export const ContactListItem: React.FC<ListItemProps> = ({ person, isSelected, o
         cn(
           'rounded text-gray-600 hover:rounded-md hover:bg-indigo-500 hover:text-white',
           'group flex gap-x-3 p-2 text-sm font-semibold leading-6',
-          isSelected || isActive ? 'bg-indigo-500 text-white' : '',
+          isSelected || isActive ? 'rounded-md bg-indigo-500 text-white' : '',
         )
       }
     >

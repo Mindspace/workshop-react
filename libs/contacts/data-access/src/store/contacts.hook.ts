@@ -1,15 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
+import { inject } from '@mindspace/di';
 
-import { ContactsService, Contact } from '../services';
-import { useDependencyInjector } from '@mindspace/di';
+import { ContactsService, Contact } from '../api';
 
 /**
  * Custom React Hook useful to search and load Contacts
  */
 export function useContacts() {
-  const service = useDependencyInjector<ContactsService>(ContactsService);
-  const [criteria, setCriteria] = useState<string>('');
+  const service = inject<ContactsService>(ContactsService);
   const [people, setPeople] = useState<Contact[]>([]);
+  const [criteria, setCriteria] = useState<string>('');
   const [selectedId, setSelectedId] = useState<string>('');
 
   const doSearch = useCallback(
@@ -41,7 +41,7 @@ export function useContacts() {
  * Custom React Hook useful to load Contact details
  */
 export function useContactDetails(id: string) {
-  const service = useDependencyInjector<ContactsService>(ContactsService);
+  const service = inject<ContactsService>(ContactsService);
   const [contact, setContact] = useState<Contact | null>(null);
 
   useEffect(() => {
