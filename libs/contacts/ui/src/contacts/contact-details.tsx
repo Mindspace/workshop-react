@@ -1,23 +1,12 @@
-import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-
-import { Contact, ContactsService } from '@workshop/data-access';
+import { useContactDetails } from './contacts.hook';
 
 export const ContactDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [contact, setContact] = useState<Contact | null>(null);
-  const [service] = useState<ContactsService>(() => new ContactsService());
-
-  useEffect(() => {
-    if (!id) return;
-
-    service.getContactById(id).then((contact) => {
-      setContact(contact);
-    });
-  }, [service, id]);
+  const contact = useContactDetails(id || '');
 
   return contact ? (
-    <div className="relative m-4 mt-6 flex h-96 flex-1 justify-center overflow-hidden rounded-xl border border-dashed border-gray-400 pt-10 text-center opacity-75 sm:px-0">
+    <div className="relative m-4 mt-6 flex h-96 flex-1 justify-center overflow-hidden rounded-xl border border-dashed border-gray-400 pt-10 text-center opacity-100 sm:px-0">
       <div className="relative w-[500px]">
         <img className="aspect-[3/2] w-full rounded-2xl object-cover" src={contact.photo} alt="" />
         <h3 className="mt-6 text-lg font-semibold leading-8 tracking-tight text-gray-900">{contact.name}</h3>
