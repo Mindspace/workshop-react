@@ -128,7 +128,11 @@ describe('DependencyInjector', () => {
       injector.addProviders([
         { provide: VAL1_TOKEN, useValue: 3 },
         { provide: VAL2_TOKEN, useValue: { name: 'Thomas' } },
-        { provide: MSG_TOKEN, useFactory: (val: number, user) => `${user.name} is windy-${val}`, deps: [VAL1_TOKEN, VAL2_TOKEN] },
+        {
+          provide: MSG_TOKEN,
+          useFactory: (val: number, user) => `${user.name} is windy-${val}`,
+          deps: [VAL1_TOKEN, VAL2_TOKEN],
+        },
       ]);
       const instA: A = injector.get(A);
 
@@ -163,7 +167,7 @@ describe('DependencyInjector', () => {
           { provide: E, useClass: E, deps: [D] },
           { provide: F, useClass: F, deps: [E, A] },
         ],
-        parent
+        parent,
       );
 
       MSG_TOKEN = tokenA;

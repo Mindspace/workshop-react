@@ -3,44 +3,44 @@ import { InjectionToken } from '../injector.token';
 export class A {
   constructor(
     public msg: string,
-    public title = 'A'
+    public title = 'A',
   ) {}
 }
 export class B {
   constructor(
     public a: A,
-    public title = 'B'
+    public title = 'B',
   ) {}
 }
 export class C {
   constructor(
     public a: A,
-    public title = 'C'
+    public title = 'C',
   ) {}
 }
 export class D {
   constructor(
     public b: B,
     public c: C,
-    public title = 'D'
+    public title = 'D',
   ) {}
 }
 export class E {
   constructor(
     public d: D,
-    public title = 'E'
+    public title = 'E',
   ) {}
 }
 export class F {
   constructor(
     public e: E,
-    public a: A
+    public a: A,
   ) {}
 }
 export class G {
   constructor(
     public b: B,
-    public title = 'G'
+    public title = 'G',
   ) {}
 }
 export class H {
@@ -57,7 +57,7 @@ export class Query {
 export class Facade {
   constructor(
     public store: Store,
-    public query: Query
+    public query: Query,
   ) {}
 }
 
@@ -65,7 +65,7 @@ export class MockB {
   a = { title: 'MockA' };
   constructor(
     public msg: string,
-    public title = 'MockB'
+    public title = 'MockB',
   ) {}
 }
 

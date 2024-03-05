@@ -1,7 +1,7 @@
 {
-  "name": "di",
+  "name": "core",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/mindspace/di/src",
+  "sourceRoot": "libs/mindspace/core/src",
   "projectType": "library",
   "tags": [],
   "targets": {
@@ -13,7 +13,7 @@
       "executor": "@nx/vite:test",
       "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "reportsDirectory": "../../../coverage/libs/mindspace/di"
+        "reportsDirectory": "../../../coverage/libs/mindspace/core"
       }
     }
   }

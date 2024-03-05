@@ -15,9 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@workshop/ui": ["libs/contacts/ui/src/index.ts"],
+      "@mindspace/core": ["libs/mindspace/core/src/index.ts"],
       "@workshop/data-access": ["libs/contacts/data-access/src/index.ts"],
-      "@mindspace/di": ["libs/mindspace/di/src/index.ts"]
+      "@workshop/ui": ["libs/contacts/ui/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

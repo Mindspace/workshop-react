@@ -4,10 +4,12 @@
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
     "ms-playwright.playwright",
+    "usernamehw.errorlens",
     "firsttris.vscode-jest-runner",
     "bradlc.vscode-tailwindcss",
     "meganrogge.template-string-converter",
     "ms-vsliveshare.vsliveshare",
-    "eliostruyf.vscode-typescript-exportallmodules"
+    "eliostruyf.vscode-typescript-exportallmodules",
+    "kingwl.vscode-vitest-runner"
   ]
 }

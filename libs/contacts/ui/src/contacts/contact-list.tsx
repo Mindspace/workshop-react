@@ -32,7 +32,7 @@ export const ContactsList: React.FC = () => {
               <ContactListItem
                 key={j}
                 person={item}
-                isSelected={item.id === data.selectedId}
+                isSelected={item.id === data.selected?.id}
                 onSelect={api.selectById}
               />
             </li>

@@ -34,11 +34,7 @@ export function initStoreState(): StoreState {
 // Status State
 // ****************************************************
 
-export declare type StatusState =
-  | SuccessState
-  | ErrorState
-  | PendingState
-  | InitializingState;
+export declare type StatusState = SuccessState | ErrorState | PendingState | InitializingState;
 export interface SuccessState {
   value: 'success';
 }
@@ -63,14 +59,8 @@ export interface ErrorState {
  *  -  trigger async action
  *  -  update with action data AND updated status
  */
-export function trackStatusWith<T extends StoreState>(
-  get: () => T,
-  set: (state: unknown) => T
-) {
-  return async <U = unknown>(
-    action: () => Promise<Partial<T>>,
-    forceSkeleton = false
-  ) => {
+export function trackStatusWith<T extends StoreState>(get: () => T, set: (state: unknown) => T) {
+  return async <U = unknown>(action: () => Promise<Partial<T>>, forceSkeleton = false) => {
     // Track isLoading state
     set(updateRequestStatus('pending', undefined, forceSkeleton));
 
@@ -104,17 +94,14 @@ export const getErrorMessages = (state: StoreState): string[] => {
   return errors.map((it) => (it as RestErrorMessage).errorMessage);
 };
 
-export const getIsInitializing = (s: StoreState) =>
-  getRequestStatus(s).value === 'initializing';
-export const getIsLoading = (s: StoreState) =>
-  getRequestStatus(s).value === 'pending';
-export const getIsReady = (s: StoreState) =>
-  getRequestStatus(s).value === 'success';
+export const getIsInitializing = (s: StoreState) => getRequestStatus(s).value === 'initializing';
+export const getIsLoading = (s: StoreState) => getRequestStatus(s).value === 'pending';
+export const getIsReady = (s: StoreState) => getRequestStatus(s).value === 'success';
 
 export function updateRequestStatus<T extends StoreState>(
   flag: 'pending' | 'success' | 'initializing' | 'error',
   updates?: Partial<T> & Errors,
-  forceSkeleton = false
+  forceSkeleton = false,
 ) {
   return (state: T): T => {
     state = {

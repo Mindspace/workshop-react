@@ -1,54 +1,52 @@
-import { useState, useEffect, useCallback } from 'react';
-import { inject } from '@mindspace/di';
+import { useCallback } from 'react';
+import { useZustandStore, inject } from '@mindspace/core';
 
-import { ContactsService, Contact } from '../api';
+import { Contact } from '../api';
+import { ContactsStore, ContactsStoreToken } from './contacts.store';
+import { ContactsViewModel, ContactsState } from './contacts.state';
+
+type InputChangeEvent = React.ChangeEvent<HTMLInputElement>;
+type NullableContact = Contact | undefined;
 
 /**
- * Custom React Hook useful to search and load Contacts
+ * Subscribe to entire Contacts store ViewModel
+ * @returns [ContactsViewModel, ContactsAPI]
  */
 export function useContacts() {
-  const service = inject<ContactsService>(ContactsService);
-  const [people, setPeople] = useState<Contact[]>([]);
-  const [criteria, setCriteria] = useState<string>('');
-  const [selectedId, setSelectedId] = useState<string>('');
+  const store = inject<ContactsStore>(ContactsStoreToken);
+  const vm = useZustandStore<ContactsViewModel>(store);
 
-  const doSearch = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const criteria = e.target.value;
-      setCriteria(criteria);
-      service?.searchBy(criteria).then(setPeople);
+  const searchBy = useCallback(
+    (e: InputChangeEvent) => {
+      return vm.searchBy(e.target.value);
     },
-    [service, setPeople],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [vm.searchBy],
   );
+  const selectById = vm.selectById;
 
-  useEffect(() => {
-    service?.searchBy(criteria).then(setPeople);
-  }, [criteria, service, setPeople]);
+  return [vm, { searchBy, selectById }] as const;
+}
 
-  return [
-    { people, criteria, selectedId },
-    {
-      doSearch,
-      selectById: (id: string) => {
-        console.log('selectById', id);
-        setSelectedId(id);
-      },
-    },
-  ] as const;
+export function useSelectedContact() {
+  const store = inject<ContactsStore>(ContactsStoreToken);
+  const { selected } = useZustandStore<ContactsViewModel>(store);
+
+  return selected;
 }
 
 /**
  * Custom React Hook useful to load Contact details
  */
 export function useContactDetails(id: string) {
-  const service = inject<ContactsService>(ContactsService);
-  const [contact, setContact] = useState<Contact | null>(null);
-
-  useEffect(() => {
-    if (!id) return setContact(null);
-
-    service?.getContactById(id).then((contact) => setContact(contact));
-  }, [service, id]);
+  const selector = useCallback(
+    (state: ContactsState): NullableContact => {
+      return state.people.find((it) => it.id === id);
+    },
+    [id],
+  );
+  const store = inject<ContactsStore>(ContactsStoreToken);
+  const contact = useZustandStore<ContactsViewModel, NullableContact>(store, selector);
 
   return contact;
 }

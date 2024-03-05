@@ -11,7 +11,8 @@ Within this workshop we will explore:
 - Functional UI components,
 - Custom React Hooks,
 - Sharing Services with React Context
-- Using true Dedpendency Injection within React
+- Using true Dependency Injection within React
+- Using Reactive Stores w/ Zustand
 
 The Jumpstart labs introduce - to the student(s) - a simple React application with master-detail routing between ContactList and ContactDetails views.
 

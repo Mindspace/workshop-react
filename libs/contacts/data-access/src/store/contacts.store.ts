@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { StoreApi } from 'zustand/vanilla';
-import { InjectionToken, UpdateState, computeWith, initStoreState, makeStore } from '@mindspace/di';
+import { InjectionToken, UpdateState, computeWith, initStoreState, makeStore } from '@mindspace/core';
 
 import { ContactsService } from '../api';
 import { ContactsAPI, ContactsComputedState, ContactsState, ContactsViewModel } from './contacts.state';
@@ -45,19 +45,18 @@ export function buildContactsStore(service: ContactsService): ContactsStore {
    *       Zustand library during createStore(...)
    */
   const configureStore = (
-    set: UpdateState<ContactsState>, // not currently used...
-    get: () => ContactsState, // not currently used... use `updateState()` instead
+    _: UpdateState<ContactsState>, // not currently used...
+    get: () => ContactsState, // not currently used... use `set((state) => {})` instead
     store: ContactsStore,
   ): ContactsViewModel => {
-    const updateState = computeWith<ContactsState>(buildComputedFn, store);
+    const set = computeWith<ContactsState>(buildComputedFn, store);
 
     const data: ContactsState = initState(); // Manually build the initial state
     const computed = buildComputedFn(data); // Manually compute the initial computed state
     const api: ContactsAPI = {
-      // Search on server based on criteria
       searchBy: async (criteria: string) => {
         const people = await service.searchBy(criteria);
-        updateState((draft: ContactsState) => ({
+        set((draft: ContactsState) => ({
           ...draft,
           people,
           criteria,
@@ -65,7 +64,7 @@ export function buildContactsStore(service: ContactsService): ContactsStore {
         return true;
       },
       selectById: async (selectedId: string) => {
-        updateState((state) => ({ ...state, selectedId }));
+        set((state) => ({ ...state, selectedId }));
         return true;
       },
     };

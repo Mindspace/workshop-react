@@ -1,4 +1,4 @@
-import { InjectionToken } from '@mindspace/di';
+import { InjectionToken } from '@mindspace/core';
 import { CONTACTS } from './data/contacts.data';
 import { Contact } from './contacts.model';
 

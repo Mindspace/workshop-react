@@ -1,5 +1,5 @@
 import { Contact } from '../api/contacts.model';
-import { StoreState } from '@mindspace/di';
+import { StoreState } from '@mindspace/core';
 
 // *******************************************************************
 // Types and initializers
