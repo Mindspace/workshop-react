@@ -18,7 +18,7 @@ export const ContactsList: React.FC = () => {
           name="search"
           type="search"
           value={data.criteria}
-          onChange={api.doSearch}
+          onChange={api.searchBy}
           autoFocus
           placeholder="Search by name..."
           className="block w-full rounded-md border-0 py-1.5 pr-2 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 "

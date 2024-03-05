@@ -32,10 +32,12 @@ export function computeWith<S extends StoreState, CS = unknown>(
   };
 
   /**
-   * Override store::set() method to head-hook and compute properties;
-   * this override is only for external-to-store use
+   * Override store::set() method to tail-hook and compute properties
+   *
+   * Note: this override [on the store instance] is required to support external `store.setState()` calls
+   *       and force re-calculations of computed properties.
    */
-
   store.setState = setWithComputed;
+
   return setWithComputed;
 }
