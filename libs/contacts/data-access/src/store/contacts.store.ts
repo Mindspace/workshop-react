@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { StoreApi } from 'zustand/vanilla';
-import { InjectionToken, UpdateState, computeWith, initStoreState, makeStore } from '@mindspace/di';
+import { InjectionToken, UpdateState, computeWith, initStoreState, makeStore } from 'libs/mindspace/core/src';
 
 import { ContactsService } from '../api';
 import { ContactsAPI, ContactsComputedState, ContactsState, ContactsViewModel } from './contacts.state';

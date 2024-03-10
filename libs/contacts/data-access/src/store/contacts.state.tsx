@@ -1,5 +1,5 @@
 import { Contact } from '../api/contacts.model';
-import { StoreState } from '@mindspace/di';
+import { ElfStoreState } from 'libs/mindspace/core/src';
 
 // *******************************************************************
 // Types and initializers
@@ -8,7 +8,7 @@ import { StoreState } from '@mindspace/di';
 /**
  * This state is serializable
  */
-export interface ContactsState extends StoreState {
+export interface ContactsState extends ElfStoreState {
   people: Contact[];
   criteria: string;
   selectedId: string;

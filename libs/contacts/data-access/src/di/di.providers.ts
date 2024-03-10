@@ -1,4 +1,4 @@
-import { DependencyInjector, makeInjector } from '@mindspace/di';
+import { DependencyInjector, makeInjector } from 'libs/mindspace/core/src';
 import { API_ENDPOINT, API_KEY, ContactsService } from '../api';
 import { ContactsStoreToken, buildContactsStore } from '../store/contacts.store';
 

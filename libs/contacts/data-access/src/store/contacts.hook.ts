@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useZustandStore, inject } from '@mindspace/di';
+import { useZustandStore, inject } from 'libs/mindspace/core/src';
 
 import { Contact } from '../api';
 import { ContactsStore, ContactsStoreToken } from './contacts.store';
